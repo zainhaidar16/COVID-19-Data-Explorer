@@ -21,37 +21,7 @@ class COVIDDataExplorer:
         self.load_data()
         
         # Custom CSS for professional look
-        self.apply_custom_styling()
-    
-    def apply_custom_styling(self):
-        """Apply custom CSS for a more professional look"""
-        st.markdown("""
-        <style>
-            .reportview-container {
-                background: #f4f4f4;
-            }
-            .sidebar .sidebar-content {
-                background: #ffffff;
-                border-radius: 10px;
-                padding: 20px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-            .block-container {
-                padding-top: 1rem;
-                padding-bottom: 1rem;
-            }
-            h1, h2 {
-                color: #2c3e50;
-                font-weight: 600;
-            }
-            .stMetric {
-                background-color: #ffffff;
-                border-radius: 10px;
-                padding: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-        </style>
-        """, unsafe_allow_html=True)
+        
     
     def load_data(self):
         """
@@ -174,6 +144,9 @@ class COVIDDataExplorer:
             "Select Date Range", 
             [self.df['date'].min(), self.df['date'].max()]
         )
+        
+        # Convert date_range to datetime
+        date_range = (pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1]))
         
         # Filter data
         filtered_df = self.df[
