@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
-import requests
-from io import StringIO
+import numpy as np
 
 class COVIDExplorer:
     def __init__(self):
@@ -19,7 +18,12 @@ class COVIDExplorer:
             
             # Data preprocessing
             self.df['date'] = pd.to_datetime(self.df['date'])
-            self.countries = sorted(self.df['location'].unique())
+            
+            # Latest data point for each country, removing NaNs
+            self.latest_data = self.df.groupby('location').last().reset_index()
+            self.latest_data = self.latest_data.dropna(subset=['total_cases'])
+            
+            self.countries = sorted(self.latest_data['location'].unique())
         except Exception as e:
             st.error(f"Error loading data: {e}")
             self.df = None
@@ -30,17 +34,22 @@ class COVIDExplorer:
         """
         st.header("Global COVID-19 Overview")
         
-        # Latest data point for each country
-        latest_data = self.df.groupby('location').last().reset_index()
+        # Ensure we have numerical values for size
+        size_column = np.log1p(self.latest_data['total_cases'])
         
         # World map of total cases
         fig = px.scatter_geo(
-            latest_data, 
+            self.latest_data, 
             locations="location", 
             locationmode="country names",
             color="total_cases",
-            size="total_cases",
+            size=size_column,
             hover_name="location",
+            hover_data={
+                "location": True, 
+                "total_cases": ":.0f",
+                "total_vaccinations": ":.0f"
+            },
             color_continuous_scale="Viridis",
             title="Total Confirmed COVID-19 Cases by Country"
         )
