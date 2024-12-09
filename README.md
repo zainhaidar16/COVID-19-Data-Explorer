@@ -70,7 +70,7 @@ Contributions are welcome! If you have any suggestions or improvements, please c
 
 ## License
 
-This project is licensed under the Apache-2.0 license. See the [LICENSE](http://_vscodecontentref_/0) file for more details.
+This project is licensed under the Apache-2.0 license.
 
 ## Acknowledgements
 
