@@ -198,6 +198,10 @@ class COVIDDataExplorer:
         mse = mean_squared_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
         
+        # Convert MSE to percentage
+        rmse = np.sqrt(mse)
+        percentage_error = (rmse / np.mean(y_test)) * 100
+        
         # Visualization
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=X_test.flatten(), y=y_test, mode='markers', name='Actual'))
@@ -206,10 +210,10 @@ class COVIDDataExplorer:
         col1, col2 = st.columns(2)
         
         with col1:
-            st.metric("Mean Squared Error", f"{mse:,.2f}")
+            st.metric("R² Score", f"{r2:.2%}")
         
         with col2:
-            st.metric("R² Score", f"{r2:.2%}")
+            st.metric("Percentage Error", f"{percentage_error:.2f}%")
         
         st.plotly_chart(fig, use_container_width=True)
     
